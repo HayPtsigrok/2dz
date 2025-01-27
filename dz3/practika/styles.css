@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+header {
+    background: #333;
+    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+}
+nav {
+    margin: 10px 0;
+}
+nav a {
+    margin: 0 15px;
+    color: #fff;
+    text-decoration: none;
+}
+section {
+    padding: 20px;
+    background: #fff;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background: #333;
+    color: #fff;
+}
+.portfolio img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+.contact-form input, .contact-form textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.butggton {
+    text-decoration: none;
+    color: #7f8c8d;
+    background: #fefefe;
+    padding:5px 8px;
+    border: 1px solid #bdc3c7;
+    border-radius: 3px;
+    margin: 20px auto;
+    text-align:center;
+    display:block;
+    width:120px;
+    position: relative;
+    height:25px;
+    font: 400 16px verdana;
+   }
+  
+  a.butggton:after {
+      content: "";
+      background: linear-gradient(to right, #2ecc71 10%, #3498db 10%, #3498db 20%, #8e44ad 20%, #8e44ad 30%, #e67e22 30%, #e67e22 40%, #c0392b 40%, #c0392b 50%, #2ecc71 50%, #2ecc71 60%, #3498db 60%, #3498db 70%, #8e44ad 70%, #8e44ad 80%, #e67e22 80%, #e67e22 90%, #c0392b 90%);
+      background-size: 200% 100%;
+      display: inline-block;
+      width: 100%;
+  }
