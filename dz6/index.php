@@ -1,66 +1,34 @@
 <?php
 
-$directory = __DIR__; 
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['rename'])) {
-        $oldName = $_POST['old_name'];
-        $newName = $_POST['new_name'];
-        if (rename($directory . '/' . $oldName, $directory . '/' . $newName)) {
-            echo "Файл переименован успешно.";
-        } else {
-            echo "Ошибка при переименовании файла.";
+// Предполагается, что $directory уже определен и безопасен
+if ($_SERVER['REQUEST_METHOD'] === 'POST') { // Проверяем, был ли запрос методом POST
+    try { // Начинаем блок обработки исключений
+        if (isset($_POST['rename'])) { // Проверяем, было ли отправлено действие переименования
+            // Проверка на существование файла
+            if (!file_exists($directory . '/' . $_POST['old_name'])) { // Проверяем, существует ли файл с старым именем
+                throw new Exception("Файл не найден."); // Если файл не найден, выбрасываем исключение с сообщением
+            }
+            $oldName = $_POST['old_name']; // Получаем старое имя файла из POST-запроса
+            $newName = $_POST['new_name']; // Получаем новое имя файла из POST-запроса
+            if (rename($directory . '/' . $oldName, $directory . '/' . $newName)) { // Пытаемся переименовать файл
+                echo "Файл переименован успешно."; // Если переименование прошло успешно, выводим сообщение об успехе
+            } else {
+                throw new Exception("Ошибка при переименовании файла."); // Если переименование не удалось, выбрасываем исключение
+            }
+        } elseif (isset($_POST['delete'])) { // Проверяем, было ли отправлено действие удаления
+            $fileToDelete = $_POST['file_name']; // Получаем имя файла для удаления из POST-запроса
+            if (!file_exists($directory . '/' . $fileToDelete)) { // Проверяем, существует ли файл для удаления
+                throw new Exception("Файл не найден."); // Если файл не найден, выбрасываем исключение с сообщением
+            }
+            if (unlink($directory . '/' . $fileToDelete)) { // Пытаемся удалить файл
+                echo "Файл удален успешно."; // Если удаление прошло успешно, выводим сообщение об успехе
+            } else {
+                throw new Exception("Ошибка при удалении файла."); // Если удаление не удалось, выбрасываем исключение
+            }
         }
-    } elseif (isset($_POST['delete'])) {
-        $fileToDelete = $_POST['file_name'];
-        if (unlink($directory . '/' . $fileToDelete)) {
-            echo "Файл удален успешно.";
-        } else {
-            echo "Ошибка при удалении файла.";
-        }
+    } catch (Exception $e) { // Обрабатываем исключения, если они были выброшены
+        echo $e->getMessage(); // Выводим сообщение об ошибке
     }
 }
-
-
-$files = array_diff(scandir($directory), array('..', '.', '.htaccess'));
-
-?>
-
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Управление файлами</title>
-</head>
-<body>
-    <h1>Содержимое папки: <?php echo $directory; ?></h1>
-    <table border="1">
-        <tr>
-            <th>Имя файла</th>
-            <th>Действия</th>
-        </tr>
-        <?php foreach ($files as $file): ?>
-            <?php if (preg_match('/.(jpg|jpeg|png|gif)$/i', $file)): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($file); ?></td>
-                    <td>
-                       
-                        <form method="post" style="display:inline;">
-                            <input type="hidden" name="old_name" value="<?php echo htmlspecialchars($file); ?>">
-                            <input type="text" name="new_name" placeholder="Новое имя" required>
-                            <input type="submit" name="rename" value="Переименовать">
-                        </form>
-                      
-                        <form method="post" style="display:inline;">
-                            <input type="hidden" name="file_name" value="<?php echo htmlspecialchars($file); ?>">
-                            <input type="submit" name="delete" value="Удалить" onclick="return confirm('Вы уверены, что хотите удалить этот файл?');">
-                        </form>
-                    </td>
-                </tr>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </table>
 </body>
 </html>
